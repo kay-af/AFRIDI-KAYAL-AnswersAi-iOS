@@ -35,7 +35,7 @@ class MockApi {
   }
 
   static Future<AppListingDto> fetchAppListing(int id) async {
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 1));
 
     switch (id) {
       case 0:

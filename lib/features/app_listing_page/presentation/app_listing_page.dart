@@ -10,12 +10,12 @@ import "package:store/features/home_page/today_page/presentation/featured_app_it
 import "package:store/features/home_page/today_page/presentation/featured_app_item/featured_app_item_content.dart";
 import "package:store/features/home_page/today_page/presentation/featured_app_item/featured_app_item_image.dart";
 import "package:store/features/routers/root_router.dart";
+import "package:store/features/shared/bold_rich_text.dart";
 import "package:store/features/shared/get_button.dart";
 import "package:store/features/shared/page_error.dart";
 import "package:store/features/shared/page_loader.dart";
 import "package:store/features/shared/shrink_back_scroll_view.dart";
 import "package:store/network/dtos/app_listing_dto.dart";
-import "package:styled_text/styled_text.dart";
 
 class AppListingPage extends StatefulWidget {
   static const route = "/app";
@@ -168,11 +168,10 @@ class _AppListingPageState extends State<AppListingPage> {
           height: 1.5,
         );
 
-    final tags = {
-      "b": StyledTextTag(
-        style: CupertinoTheme.of(context).textTheme.textStyle.copyWith(fontWeight: FontWeight.bold),
-      ),
-    };
+    final boldStyle = defaultStyle.copyWith(
+      color: CupertinoTheme.of(context).textTheme.textStyle.color,
+      fontWeight: FontWeight.bold,
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -185,10 +184,10 @@ class _AppListingPageState extends State<AppListingPage> {
               ...ListUtils.insertBetweenEvery(
                 appListing.longDescriptionPre
                     .map(
-                      (desc) => StyledText(
-                        text: desc,
-                        tags: tags,
-                        style: defaultStyle,
+                      (desc) => BoldRichText(
+                        textWithTag: desc,
+                        defaultStyle: defaultStyle,
+                        boldStyle: boldStyle,
                       ),
                     )
                     .toList(),
@@ -223,10 +222,10 @@ class _AppListingPageState extends State<AppListingPage> {
               ...ListUtils.insertBetweenEvery(
                 appListing.longDescriptionPost
                     .map(
-                      (desc) => StyledText(
-                        text: desc,
-                        tags: tags,
-                        style: defaultStyle,
+                      (desc) => BoldRichText(
+                        textWithTag: desc,
+                        defaultStyle: defaultStyle,
+                        boldStyle: boldStyle,
                       ),
                     )
                     .toList(),
