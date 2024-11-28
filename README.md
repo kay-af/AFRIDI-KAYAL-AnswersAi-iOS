@@ -18,8 +18,8 @@ Ensure the following are installed and configured before running the app:
 Clone this repository to your local machine:
 
 ```bash
-git clone <repository-url>
-cd <project-directory>
+git clone https://github.com/kay-af/AFRIDI-KAYAL-AnswersAi-iOS.git
+cd AFRIDI-KAYAL-AnswersAi-iOS
 ```
 
 ### 2. Fetch Dependencies & Run build runner
