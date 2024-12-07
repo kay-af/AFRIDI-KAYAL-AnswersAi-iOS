@@ -7,14 +7,16 @@ class ScalingAction extends StatefulWidget {
   final Duration duration;
   final HitTestBehavior behavior;
   final List<GlobalKey>? ignoreChildrenKeys;
+  final ValueChanged<double>? onScaleUpdate;
 
   const ScalingAction({
     required this.child,
     required this.onPressed,
     this.behavior = HitTestBehavior.deferToChild,
     this.scaleFactor = 0.96,
-    this.duration = Durations.medium2,
+    this.duration = const Duration(milliseconds: 200),
     this.ignoreChildrenKeys,
+    this.onScaleUpdate,
     super.key,
   });
 
@@ -22,13 +24,34 @@ class ScalingAction extends StatefulWidget {
   State<ScalingAction> createState() => _ScalingActionState();
 }
 
-class _ScalingActionState extends State<ScalingAction> {
-  double _scale = 1.0;
+class _ScalingActionState extends State<ScalingAction> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
 
   @override
-  void setState(VoidCallback fn) {
-    if (!mounted) return;
-    super.setState(fn);
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: widget.duration,
+      vsync: this,
+    );
+
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: widget.scaleFactor,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOutSine,
+    ))
+      ..addListener(() {
+        widget.onScaleUpdate?.call(_scaleAnimation.value);
+      });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   void _onTapDown(TapDownDetails details) {
@@ -54,16 +77,16 @@ class _ScalingActionState extends State<ScalingAction> {
         }
       }
     }
-    setState(() => _scale = widget.scaleFactor);
+    _controller.forward().orCancel.catchError((error) {});
   }
 
   void _onTapUp(TapUpDetails details) {
-    setState(() => _scale = 1.0);
+    _controller.reverse().orCancel.catchError((error) {});
     widget.onPressed();
   }
 
   void _onTapCancel() {
-    setState(() => _scale = 1.0);
+    _controller.reverse().orCancel.catchError((error) {});
   }
 
   @override
@@ -73,10 +96,14 @@ class _ScalingActionState extends State<ScalingAction> {
       onTapUp: _onTapUp,
       onTapCancel: _onTapCancel,
       behavior: widget.behavior,
-      child: AnimatedScale(
-        curve: Curves.easeInOutSine,
-        scale: _scale,
-        duration: widget.duration,
+      child: AnimatedBuilder(
+        animation: _scaleAnimation,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: _scaleAnimation.value,
+            child: child,
+          );
+        },
         child: widget.child,
       ),
     );

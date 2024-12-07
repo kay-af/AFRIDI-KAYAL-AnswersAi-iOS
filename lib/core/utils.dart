@@ -40,3 +40,17 @@ class ListUtils {
     return result;
   }
 }
+
+class RectUtils {
+  RectUtils._();
+
+  static Rect scaleCentered(Rect rect, double scale) {
+    final double newWidth = rect.width * scale;
+    final double newHeight = rect.height * scale;
+
+    final double dx = rect.center.dx - newWidth / 2;
+    final double dy = rect.center.dy - newHeight / 2;
+
+    return Rect.fromLTWH(dx, dy, newWidth, newHeight);
+  }
+}

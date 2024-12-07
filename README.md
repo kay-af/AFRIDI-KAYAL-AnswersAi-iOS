@@ -65,3 +65,11 @@ flutter run
 - Animations are done using flutter's inbuilt features. No external libraries are used.
 
 - The demo video submitted shows a slight jank after loading the data in the details page. The reason for this is that the `styled_text` package used was parsing xml tags asynchronously. To counter this, I have updated the code with a very simple logic to parse **unmalformed xml** based text containing **only \<b\> tags** _(This logic does not cover cases with nested tags)_. This fixed the asynchronous loading of the text.
+
+## Development Updates
+
+- I have fixed the opening of the card to match the animation more as shown in the design reference. The card now grows down while opening and shrinks when closing.
+
+- I have added a blur effect behind the card when transitioning to the next screen.
+
+- I have improved gestures for going back to the home page from the app page, making it more seamless.
